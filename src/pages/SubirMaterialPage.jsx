@@ -154,7 +154,7 @@ export default function SubirMaterialPage() {
             </select>
           </div>
           
-          <button type="submit" className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
+          <button type="submit" className="bg-red-700 text-white px-6 py-2 rounded hover:bg-red-800 font-semibold">
             Subir Material
           </button>
         </form>

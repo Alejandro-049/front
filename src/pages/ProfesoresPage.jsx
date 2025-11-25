@@ -73,7 +73,7 @@ export default function ProfesoresPage() {
               required
             />
           </div>
-          <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+          <button type="submit" className="bg-red-700 text-white px-4 py-2 rounded hover:bg-red-800 font-semibold">
             Crear Profesor
           </button>
         </form>
@@ -87,7 +87,7 @@ export default function ProfesoresPage() {
               <div className="font-medium">{prof.nombre} {prof.apellido}</div>
               <button 
                 onClick={() => handleDelete(prof.idProfesor)}
-                className="text-red-600 hover:underline text-sm"
+                className="text-red-600 hover:underline text-sm font-semibold"
               >
                 Eliminar
               </button>

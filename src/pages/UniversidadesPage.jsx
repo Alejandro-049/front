@@ -88,14 +88,14 @@ export default function UniversidadesPage() {
             />
           </div>
           <div className="flex gap-2">
-            <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+            <button type="submit" className="bg-red-700 text-white px-4 py-2 rounded hover:bg-red-800 font-semibold">
               {editing ? 'Actualizar' : 'Crear'}
             </button>
             {editing && (
               <button 
                 type="button" 
                 onClick={() => { setEditing(null); setForm({ universidad: '', ciudad: '' }); }}
-                className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+                className="bg-yellow-500 text-red-700 px-4 py-2 rounded hover:bg-yellow-400 font-semibold"
               >
                 Cancelar
               </button>
@@ -116,13 +116,13 @@ export default function UniversidadesPage() {
               <div className="flex gap-2">
                 <button 
                   onClick={() => handleEdit(univ)}
-                  className="text-blue-600 hover:underline text-sm"
+                  className="text-red-700 hover:underline text-sm font-semibold"
                 >
                   Editar
                 </button>
                 <button 
                   onClick={() => handleDelete(univ.idUniversidad)}
-                  className="text-red-600 hover:underline text-sm"
+                  className="text-red-600 hover:underline text-sm font-semibold"
                 >
                   Eliminar
                 </button>

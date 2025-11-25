@@ -68,7 +68,7 @@ export default function AsignaturasPage() {
           </div>
           <button
             type="submit"
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+            className="bg-red-700 text-white px-4 py-2 rounded hover:bg-red-800 font-semibold"
           >
             Crear Asignatura
           </button>
@@ -86,7 +86,7 @@ export default function AsignaturasPage() {
               <div className="font-medium">{asig.idAsignatura}</div>
               <button
                 onClick={() => handleDelete(asig.idAsignatura)}
-                className="text-red-600 hover:underline text-sm"
+                className="text-red-600 hover:underline text-sm font-semibold"
               >
                 Eliminar
               </button>
