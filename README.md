@@ -202,6 +202,20 @@ Navega por el sidebar para explorar las diferentes secciones.
 
 1. **Mock de Roles**: Actualmente el rol se cambia desde el selector en el header. En producción, debe obtenerse del token JWT o sesión.
 2. **Servicios Backend**: Los servicios en `src/services/` realizan llamadas a la API. Asegúrate de que el backend esté activo.
+
+3. **Configuración de API (desarrollo)**: La aplicación lee la base de la API desde la variable de entorno `VITE_API_BASE`. Por defecto usa `http://localhost:8080/api`. Los endpoints esperados para listas son:
+
+- `GET /universidades` → lista de universidades
+- `GET /profesores` → lista de profesores
+- `GET /asignaturas` → lista de asignaturas
+
+Puedes definir `VITE_API_BASE` en un archivo `.env` en la raíz del proyecto, por ejemplo:
+
+```
+VITE_API_BASE=http://tu-backend:8080/api
+```
+
+Si el backend no responde, los servicios usan datos mock incluidos en el frontend para mantener la funcionalidad.
 3. **Diseño Limpio**: El código está organizado para facilitar mantenimiento y escalabilidad.
 
 ---

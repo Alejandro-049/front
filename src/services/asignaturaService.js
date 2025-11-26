@@ -1,22 +1,17 @@
-const API_URL = "http://localhost:8080/api/asignatura";
+import { API_BASE } from "./apiConfig";
 
-const mockAsignaturas = [
-  { idAsignatura: "MAT101", nombre: "Cálculo Diferencial" },
-  { idAsignatura: "FIS101", nombre: "Física I" },
-  { idAsignatura: "PROG101", nombre: "Programación Básica" },
-  { idAsignatura: "ALG101", nombre: "Álgebra Lineal" },
-  { idAsignatura: "QUI101", nombre: "Química General" },
-  { idAsignatura: "ING101", nombre: "Inglés I" },
-];
+const API_URL = `${API_BASE}/asignaturas`;
 
 export const asignaturaService = {
   getAll: async () => {
     try {
       const response = await fetch(API_URL);
       if (!response.ok) throw new Error("Error fetching");
-      return response.json();
+      const json = await response.json();
+      return Array.isArray(json) ? json : (json && json.data ? json.data : []);
     } catch (error) {
-      return mockAsignaturas;
+      // No mock data: return empty list on error
+      return [];
     }
   },
 

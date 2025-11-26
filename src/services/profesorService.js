@@ -1,21 +1,17 @@
-const API_URL = "http://localhost:8080/api/profesor";
+import { API_BASE } from "./apiConfig";
 
-const mockProfesores = [
-  { idProfesor: "1", nombre: "Carlos", apellido: "Mendoza" },
-  { idProfesor: "2", nombre: "María", apellido: "García" },
-  { idProfesor: "3", nombre: "Juan", apellido: "Pérez" },
-  { idProfesor: "4", nombre: "Ana", apellido: "López" },
-  { idProfesor: "5", nombre: "Roberto", apellido: "Sánchez" },
-];
+const API_URL = `${API_BASE}/profesores`;
 
 export const profesorService = {
   getAll: async () => {
     try {
       const response = await fetch(API_URL);
       if (!response.ok) throw new Error("Error fetching");
-      return response.json();
+      const json = await response.json();
+      return Array.isArray(json) ? json : (json && json.data ? json.data : []);
     } catch (error) {
-      return mockProfesores;
+      // No mock data: return empty list on error
+      return [];
     }
   },
 

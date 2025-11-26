@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
 import { X } from "lucide-react";
 import MultiSelect from "./MultiSelect";
+import Alert from "./Alert";
 import { universidadService } from "../services/universidadService";
 import { asignaturaService } from "../services/asignaturaService";
 import { profesorService } from "../services/profesorService";
+import { articulosGeneralesService } from "../services/articulosGeneralesService";
 
 export default function UploadMaterialModal({ onClose, onSubmit, adminMode }) {
   const [form, setForm] = useState({
@@ -19,6 +21,9 @@ export default function UploadMaterialModal({ onClose, onSubmit, adminMode }) {
   const [profesores, setProfesores] = useState([]);
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState(1);
+  const [existingMateriales, setExistingMateriales] = useState([]);
+  const [loadingExisting, setLoadingExisting] = useState(false);
+  const [existingError, setExistingError] = useState(null);
 
   useEffect(() => {
     loadData();
@@ -69,6 +74,27 @@ export default function UploadMaterialModal({ onClose, onSubmit, adminMode }) {
     }
     setStep(2);
   };
+
+  // Cuando cambia la asignatura seleccionada, cargamos materiales existentes para mostrar referencia
+  useEffect(() => {
+    const loadExisting = async () => {
+      setExistingError(null);
+      setExistingMateriales([]);
+      if (!form.asignatura || form.asignatura.length === 0) return;
+      const asignaturaId = form.asignatura[0];
+      try {
+        setLoadingExisting(true);
+        const data = await articulosGeneralesService.obtenerMaterialesPorAsignatura(asignaturaId);
+        setExistingMateriales(Array.isArray(data) ? data : []);
+      } catch (err) {
+        setExistingError('No se pudieron cargar materiales relacionados');
+      } finally {
+        setLoadingExisting(false);
+      }
+    };
+
+    loadExisting();
+  }, [form.asignatura]);
 
   return (
     <>
@@ -160,6 +186,29 @@ export default function UploadMaterialModal({ onClose, onSubmit, adminMode }) {
                   required
                 />
               </div>
+              
+              {/* Materiales existentes para la primera asignatura seleccionada (referencia) */}
+              <div className="mt-3">
+                {loadingExisting ? (
+                  <div className="text-sm text-gray-600">Cargando materiales relacionados...</div>
+                ) : existingError ? (
+                  <Alert type="error">{existingError}</Alert>
+                ) : existingMateriales && existingMateriales.length > 0 ? (
+                  <div className="bg-white border rounded p-3 mt-2">
+                    <div className="text-sm font-semibold mb-2">Materiales relacionados a la asignatura seleccionada</div>
+                    <ul className="text-sm text-gray-700 list-disc list-inside">
+                      {existingMateriales.map((m) => (
+                        <li key={m.idMaterial || m.id}>
+                          {m.titulo || m.nombre || `Material ${m.idMaterial || m.id}`}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ) : (
+                  <div className="text-sm text-gray-500 mt-2">No se encontraron materiales relacionados.</div>
+                )}
+              </div>
+
               </div>
             )}
 

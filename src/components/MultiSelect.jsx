@@ -43,10 +43,13 @@ export default function MultiSelect({ label, options, selected, onAdd, onRemove,
         <button
           type="button"
           onClick={() => setOpenDropdown(!openDropdown)}
-          className="w-full border rounded px-3 py-2 text-left bg-white hover:bg-gray-50 flex justify-between items-center"
+          className={`w-full border rounded px-3 py-2 text-left bg-white flex justify-between items-center ${options.length === 0 ? 'opacity-60 cursor-not-allowed' : 'hover:bg-gray-50'}`}
+          disabled={options.length === 0}
         >
           <span className="text-gray-600">
-            {availableOptions.length > 0
+            {options.length === 0
+              ? `No hay opciones disponibles`
+              : availableOptions.length > 0
               ? `Agregar ${label.toLowerCase()}`
               : "No hay más opciones"}
           </span>

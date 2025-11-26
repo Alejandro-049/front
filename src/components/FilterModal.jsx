@@ -27,11 +27,15 @@ export default function FilterModal({ isOpen, onClose, filters, setFilters, univ
                 className="w-full border rounded px-3 py-2"
               >
                 <option value="">Todas</option>
-                {universidades.map((u) => (
-                  <option key={u.idUniversidad} value={u.idUniversidad}>
-                    {u.universidad}
-                  </option>
-                ))}
+                {universidades && universidades.length > 0 ? (
+                  universidades.map((u) => (
+                    <option key={u.idUniversidad} value={u.idUniversidad}>
+                      {u.universidad}
+                    </option>
+                  ))
+                ) : (
+                  <option disabled value="">No hay universidades disponibles</option>
+                )}
               </select>
             </div>
 
@@ -43,11 +47,15 @@ export default function FilterModal({ isOpen, onClose, filters, setFilters, univ
                 className="w-full border rounded px-3 py-2"
               >
                 <option value="">Todas</option>
-                {asignaturas.map((a) => (
-                  <option key={a.idAsignatura} value={a.idAsignatura}>
-                    {a.idAsignatura}
-                  </option>
-                ))}
+                {asignaturas && asignaturas.length > 0 ? (
+                  asignaturas.map((a) => (
+                    <option key={a.idAsignatura} value={a.idAsignatura}>
+                      {a.idAsignatura}
+                    </option>
+                  ))
+                ) : (
+                  <option disabled value="">No hay asignaturas disponibles</option>
+                )}
               </select>
             </div>
 
@@ -59,11 +67,15 @@ export default function FilterModal({ isOpen, onClose, filters, setFilters, univ
                 className="w-full border rounded px-3 py-2"
               >
                 <option value="">Todos</option>
-                {profesores.map((p) => (
-                  <option key={p.idProfesor} value={p.idProfesor}>
-                    {p.nombre} {p.apellido}
-                  </option>
-                ))}
+                {profesores && profesores.length > 0 ? (
+                  profesores.map((p) => (
+                    <option key={p.idProfesor} value={p.idProfesor}>
+                      {p.nombre} {p.apellido}
+                    </option>
+                  ))
+                ) : (
+                  <option disabled value="">No hay profesores disponibles</option>
+                )}
               </select>
             </div>
 

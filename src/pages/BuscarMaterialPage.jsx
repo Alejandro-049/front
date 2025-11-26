@@ -7,6 +7,7 @@ import { universidadService } from "../services/universidadService";
 import { asignaturaService } from "../services/asignaturaService";
 import { profesorService } from "../services/profesorService";
 import { materialService } from "../services/materialService";
+import { articulosGeneralesService } from "../services/articulosGeneralesService";
 
 export default function BuscarMaterialPage({ adminMode }) {
   const [query, setQuery] = useState("");
@@ -49,7 +50,27 @@ export default function BuscarMaterialPage({ adminMode }) {
         ...filters,
         titulo: searchQuery !== null ? searchQuery : query,
       };
-      const data = await materialService.search(searchParams);
+      let data = [];
+
+      // If filters include universidad/profesor/asignatura, prefer articulosGeneralesService buscarFiltro
+      if (searchParams.universidad || searchParams.profesor || searchParams.asignatura) {
+        // ensure required params for buscarFiltro
+        if (searchParams.profesor && searchParams.universidad && searchParams.asignatura) {
+          data = await articulosGeneralesService.buscarFiltro(searchParams.profesor, searchParams.universidad, searchParams.asignatura);
+          // obtenerMaterialesPorAsignatura returns material objects for a given asignatura
+          // if we received article mappings instead, try to map to materiales via obtenerMaterialesPorAsignatura
+          if (data && data.length > 0 && data[0].materialId !== undefined) {
+            // fetch unique materiales for the asignatura
+            const materiales = await articulosGeneralesService.obtenerMaterialesPorAsignatura(searchParams.asignatura);
+            data = materiales;
+          }
+        } else {
+          // If incomplete filter set, fallback to materialService
+          data = await materialService.search(searchParams);
+        }
+      } else {
+        data = await materialService.search(searchParams);
+      }
       setResultados(data);
       if (data.length === 0) {
         setMessage({ type: 'info', text: 'No se encontraron resultados' });

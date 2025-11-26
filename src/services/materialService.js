@@ -1,35 +1,34 @@
-const API_URL = "http://localhost:8080/api/material";
+import { API_BASE } from "./apiConfig";
+
+const API_URL = `${API_BASE}/materiales`;
 
 const mockMateriales = [
   {
-    id: "1",
+    idMaterial: 1,
     titulo: "Apuntes de Cálculo Diferencial",
     asignatura: "MAT101",
     profesor: "1",
     universidad: "1",
-    detalles: "Apuntes completos del semestre con ejemplos y ejercicios resueltos",
-    archivo: "apuntes-calculo.pdf",
-    fecha: "11/15/2025"
+    ruta_archivo: "apuntes-calculo.pdf",
+    año: "2025-1",
   },
   {
-    id: "2",
+    idMaterial: 2,
     titulo: "Ejercicios de Física I",
     asignatura: "FIS101",
     profesor: "2",
     universidad: "2",
-    detalles: "Serie de ejercicios propuestos por el profesor con soluciones",
-    archivo: "ejercicios-fisica.pdf",
-    fecha: "11/10/2025"
+    ruta_archivo: "ejercicios-fisica.pdf",
+    año: "2025-1",
   },
   {
-    id: "3",
+    idMaterial: 3,
     titulo: "Examen Final Programación",
     asignatura: "PROG101",
     profesor: "3",
     universidad: "3",
-    detalles: "Examen del semestre anterior con respuestas",
-    archivo: "examen-prog.pdf",
-    fecha: "11/05/2025"
+    ruta_archivo: "examen-prog.pdf",
+    año: "2025-1",
   },
 ];
 
@@ -47,17 +46,30 @@ export const materialService = {
     }
   },
 
+  // Search will try specific backend endpoints depending on provided filters
   search: async (filters) => {
     try {
-      const params = new URLSearchParams();
+      // If title filter provided, call buscar/titulo
+      if (filters.titulo) {
+        const res = await fetch(`${API_URL}/buscar/titulo/${encodeURIComponent(filters.titulo)}`);
+        if (!res.ok) throw new Error("Error fetching by titulo");
+        const json = await res.json();
+        return Array.isArray(json) ? json : (json && json.data ? json.data : []);
+      }
 
-      Object.keys(filters).forEach((key) => {
-        if (filters[key]) params.append(key, filters[key]);
-      });
+      // If año filter provided
+      if (filters.año) {
+        const res = await fetch(`${API_URL}/buscar/ano/${encodeURIComponent(filters.año)}`);
+        if (!res.ok) throw new Error("Error fetching by año");
+        const json = await res.json();
+        return Array.isArray(json) ? json : (json && json.data ? json.data : []);
+      }
 
-      const response = await fetch(`${API_URL}/buscar?${params}`);
-      if (!response.ok) throw new Error("Error fetching");
-      return response.json();
+      // Fallback: get all materials
+      const res = await fetch(API_URL);
+      if (!res.ok) throw new Error("Error fetching all materials");
+      const json = await res.json();
+      return Array.isArray(json) ? json : (json && json.data ? json.data : []);
     } catch (error) {
       return mockMateriales;
     }
