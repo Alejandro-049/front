@@ -51,7 +51,7 @@ export default function AsignaturasPage({ adminMode }) {
 
       {message && <Alert type={message.type}>{message.text}</Alert>}
 
-      {userRole === 'admin' ? (
+      {adminMode ? (
         <div className="bg-white border rounded-lg p-6 mb-6">
           <h3 className="text-lg font-semibold mb-4">Nueva Asignatura</h3>
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -90,7 +90,7 @@ export default function AsignaturasPage({ adminMode }) {
               className="flex justify-between items-center p-3 border rounded"
             >
               <div className="font-medium">{asig.idAsignatura}</div>
-              {userRole === 'admin' ? (
+              {adminMode ? (
                 <button
                   onClick={() => handleDelete(asig.idAsignatura)}
                   className="text-red-600 hover:underline text-sm font-semibold"

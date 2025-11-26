@@ -1,15 +1,16 @@
 import { useState, useEffect } from "react";
 import { X } from "lucide-react";
+import MultiSelect from "./MultiSelect";
 import { universidadService } from "../services/universidadService";
 import { asignaturaService } from "../services/asignaturaService";
 import { profesorService } from "../services/profesorService";
 
-export default function UploadMaterialModal({ onClose, onSubmit, userRole }) {
+export default function UploadMaterialModal({ onClose, onSubmit, adminMode }) {
   const [form, setForm] = useState({
     titulo: "",
-    asignatura: "",
-    profesor: "",
-    universidad: "",
+    asignatura: [],
+    profesor: [],
+    universidad: [],
     anio: "",
     archivo: null,
   });
@@ -40,8 +41,8 @@ export default function UploadMaterialModal({ onClose, onSubmit, userRole }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!form.titulo || !form.asignatura) {
-      alert("Por favor completa al menos título y asignatura");
+    if (!form.titulo || !form.asignatura || form.asignatura.length === 0) {
+      alert("Por favor completa al menos título y selecciona al menos una asignatura");
       return;
     }
 
@@ -62,8 +63,8 @@ export default function UploadMaterialModal({ onClose, onSubmit, userRole }) {
 
   const handleNext = () => {
     // Validate required fields of step 1 (asignatura required)
-    if (!form.asignatura) {
-      alert("Por favor selecciona una asignatura antes de continuar");
+    if (!form.asignatura || form.asignatura.length === 0) {
+      alert("Por favor selecciona al menos una asignatura antes de continuar");
       return;
     }
     setStep(2);
@@ -104,54 +105,60 @@ export default function UploadMaterialModal({ onClose, onSubmit, userRole }) {
               <div className="bg-gray-50 p-4 rounded border">
               <h4 className="font-semibold mb-3 text-red-700">Metadatos - Parte 1</h4>
               <div className="grid grid-cols-1 gap-4">
-                <div>
-                  <label className="block text-sm font-medium mb-1">Universidad</label>
-                  <select
-                    value={form.universidad}
-                    onChange={(e) => setForm({ ...form, universidad: e.target.value })}
-                    className="w-full border rounded px-3 py-2"
-                  >
-                    <option value="">Selecciona una universidad</option>
-                    {universidades.map((u) => (
-                      <option key={u.idUniversidad} value={u.idUniversidad}>
-                        {u.universidad}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+                <MultiSelect
+                  label="Universidades"
+                  options={universidades.map((u) => ({
+                    id: u.idUniversidad,
+                    label: u.universidad,
+                  }))}
+                  selected={form.universidad}
+                  onAdd={(id) =>
+                    setForm({ ...form, universidad: [...form.universidad, id] })
+                  }
+                  onRemove={(id) =>
+                    setForm({
+                      ...form,
+                      universidad: form.universidad.filter((u) => u !== id),
+                    })
+                  }
+                />
 
-                <div>
-                  <label className="block text-sm font-medium mb-1">Profesor</label>
-                  <select
-                    value={form.profesor}
-                    onChange={(e) => setForm({ ...form, profesor: e.target.value })}
-                    className="w-full border rounded px-3 py-2"
-                  >
-                    <option value="">Selecciona un profesor</option>
-                    {profesores.map((p) => (
-                      <option key={p.idProfesor} value={p.idProfesor}>
-                        {p.nombre} {p.apellido}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+                <MultiSelect
+                  label="Profesores"
+                  options={profesores.map((p) => ({
+                    id: p.idProfesor,
+                    label: `${p.nombre} ${p.apellido}`,
+                  }))}
+                  selected={form.profesor}
+                  onAdd={(id) =>
+                    setForm({ ...form, profesor: [...form.profesor, id] })
+                  }
+                  onRemove={(id) =>
+                    setForm({
+                      ...form,
+                      profesor: form.profesor.filter((p) => p !== id),
+                    })
+                  }
+                />
 
-                <div>
-                  <label className="block text-sm font-medium mb-1">Asignatura *</label>
-                  <select
-                    value={form.asignatura}
-                    onChange={(e) => setForm({ ...form, asignatura: e.target.value })}
-                    className="w-full border rounded px-3 py-2"
-                    required
-                  >
-                    <option value="">Selecciona una asignatura</option>
-                    {asignaturas.map((a) => (
-                      <option key={a.idAsignatura} value={a.idAsignatura}>
-                        {a.nombre || a.idAsignatura}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+                <MultiSelect
+                  label="Asignatura"
+                  options={asignaturas.map((a) => ({
+                    id: a.idAsignatura,
+                    label: a.nombre || a.idAsignatura,
+                  }))}
+                  selected={form.asignatura}
+                  onAdd={(id) =>
+                    setForm({ ...form, asignatura: [...form.asignatura, id] })
+                  }
+                  onRemove={(id) =>
+                    setForm({
+                      ...form,
+                      asignatura: form.asignatura.filter((a) => a !== id),
+                    })
+                  }
+                  required
+                />
               </div>
               </div>
             )}

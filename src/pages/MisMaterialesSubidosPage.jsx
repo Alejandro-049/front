@@ -7,6 +7,14 @@ export default function MisMaterialesSubidosPage({ adminMode }) {
   const [materiales, setMateriales] = useState([]);
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [message, setMessage] = useState(null);
+  const [currentUserId] = useState(() => {
+    let userId = localStorage.getItem("userId");
+    if (!userId) {
+      userId = `user_${Date.now()}`;
+      localStorage.setItem("userId", userId);
+    }
+    return userId;
+  });
 
   useEffect(() => {
     loadMateriales();
@@ -40,7 +48,7 @@ export default function MisMaterialesSubidosPage({ adminMode }) {
     try {
       const key = "uploadedMaterials";
       const id = Date.now(); // ID simple basado en timestamp
-      const materialWithId = { ...newMaterial, id };
+      const materialWithId = { ...newMaterial, id, userId: currentUserId };
       const updated = [materialWithId, ...materiales];
       localStorage.setItem(key, JSON.stringify(updated));
       setMateriales(updated);
@@ -75,9 +83,9 @@ export default function MisMaterialesSubidosPage({ adminMode }) {
                 <div className="flex-1">
                   <h3 className="text-lg font-semibold text-red-700">{material.titulo}</h3>
                   <div className="text-sm text-gray-600 space-y-1 mt-2">
-                    <div>Asignatura: {material.asignatura || "N/A"}</div>
-                    <div>Profesor: {material.profesor || "N/A"}</div>
-                    <div>Universidad: {material.universidad || "N/A"}</div>
+                    <div>Asignatura: {Array.isArray(material.asignatura) ? material.asignatura.join(", ") : (material.asignatura || "N/A")}</div>
+                    <div>Profesor: {Array.isArray(material.profesor) ? material.profesor.join(", ") : (material.profesor || "N/A")}</div>
+                    <div>Universidad: {Array.isArray(material.universidad) ? material.universidad.join(", ") : (material.universidad || "N/A")}</div>
                     <div>Fecha: {material.fecha || "N/A"}</div>
                   </div>
                 </div>
@@ -95,12 +103,14 @@ export default function MisMaterialesSubidosPage({ adminMode }) {
                   >
                     <Download size={16} /> Descargar
                   </button>
-                  <button
-                    onClick={() => handleDeleteMaterial(material.id)}
-                    className="bg-red-600 text-white px-3 py-2 rounded hover:bg-red-700 flex items-center gap-1 font-semibold"
-                  >
-                    <Trash2 size={16} /> Eliminar
-                  </button>
+                  {(adminMode || material.userId === currentUserId) && (
+                    <button
+                      onClick={() => handleDeleteMaterial(material.id)}
+                      className="bg-red-600 text-white px-3 py-2 rounded hover:bg-red-700 flex items-center gap-1 font-semibold"
+                    >
+                      <Trash2 size={16} /> Eliminar
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
@@ -122,7 +132,7 @@ export default function MisMaterialesSubidosPage({ adminMode }) {
         <UploadMaterialModal
           onClose={() => setShowUploadModal(false)}
           onSubmit={handleAddMaterial}
-          userRole={userRole}
+          adminMode={adminMode}
         />
       )}
     </div>
