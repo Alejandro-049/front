@@ -89,7 +89,7 @@ export default function AsignaturasPage({ adminMode }) {
               key={asig.idAsignatura}
               className="flex justify-between items-center p-3 border rounded"
             >
-              <div className="font-medium">{asig.idAsignatura}</div>
+              <div className="font-medium">{asig.materia}</div>
               {adminMode ? (
                 <button
                   onClick={() => handleDelete(asig.idAsignatura)}
