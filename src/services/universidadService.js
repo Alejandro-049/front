@@ -1,9 +1,22 @@
 const API_URL = "http://localhost:8080/api/universidad";
 
+const mockUniversidades = [
+  { idUniversidad: "1", universidad: "Universidad Nacional Autónoma de México (UNAM)" },
+  { idUniversidad: "2", universidad: "Instituto Politécnico Nacional (IPN)" },
+  { idUniversidad: "3", universidad: "Universidad de Guadalajara (UdeG)" },
+  { idUniversidad: "4", universidad: "Tecnológico de Monterrey (ITESM)" },
+  { idUniversidad: "5", universidad: "Universidad Autónoma de Nuevo León (UANL)" },
+];
+
 export const universidadService = {
   getAll: async () => {
-    const response = await fetch(API_URL);
-    return response.json();
+    try {
+      const response = await fetch(API_URL);
+      if (!response.ok) throw new Error("Error fetching");
+      return response.json();
+    } catch (error) {
+      return mockUniversidades;
+    }
   },
 
   create: async (data) => {
