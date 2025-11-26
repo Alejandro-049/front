@@ -21,17 +21,35 @@ export default function AsignaturasPage({ adminMode }) {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    try {
-      await asignaturaService.create({ idAsignatura: nombre });
+  try {
+    const response = await asignaturaService.create({ 
+      materia: nombre, 
+      año: "2025-1" 
+    });
+    
+    console.log("Respuesta del servidor:", response);  // ← DEBUG
+    
+    if (response.success || response.id) {
       setMessage({ type: "success", text: "Asignatura creada" });
       setNombre("");
       loadAsignaturas();
-    } catch (error) {
-      setMessage({ type: "error", text: "Error al crear asignatura" });
+    } else {
+      setMessage({ 
+        type: "error", 
+        text: response.message || "Error al crear asignatura" 
+      });
     }
-  };
+  } catch (error) {
+    console.error("Error completo:", error);  // ← DEBUG
+    setMessage({ 
+      type: "error", 
+      text: error.message || "Error al crear asignatura" 
+    });
+  }
+};
+
 
   const handleDelete = async (id) => {
     if (!confirm("¿Eliminar esta asignatura?")) return;
