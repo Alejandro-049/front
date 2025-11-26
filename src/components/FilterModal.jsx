@@ -50,7 +50,7 @@ export default function FilterModal({ isOpen, onClose, filters, setFilters, univ
                 {asignaturas && asignaturas.length > 0 ? (
                   asignaturas.map((a) => (
                     <option key={a.idAsignatura} value={a.idAsignatura}>
-                      {a.idAsignatura}
+                      {a.materia || a.nombre || `Asignatura ${a.idAsignatura}`}
                     </option>
                   ))
                 ) : (

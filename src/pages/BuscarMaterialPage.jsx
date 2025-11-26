@@ -133,25 +133,76 @@ export default function BuscarMaterialPage({ adminMode }) {
 
                   <div className="flex flex-col gap-2">
                     <button
-                      onClick={() => {
-                        // simular descarga: guardar en localStorage
+                      onClick={async () => {
                         try {
+                          const response = await fetch(
+                            `http://localhost:8081/unicloud/materiales/${material.idMaterial}/descargar`
+                          );
+
+                          if (!response.ok) {
+                            alert('Error al descargar el archivo');
+                            return;
+                          }
+
+                          // Obtener el nombre del archivo del header Content-Disposition
+                          const contentDisposition = response.headers.get('Content-Disposition');
+                          let nombreArchivo = material.titulo || 'archivo';
+                          
+                          if (contentDisposition) {
+                            const matches = contentDisposition.match(/filename="([^"]+)"/);
+                            if (matches && matches[1]) {
+                              nombreArchivo = matches[1];
+                            }
+                          }
+
+                          // ← AGREGAR EXTENSIÓN SI NO LA TIENE
+                          if (!nombreArchivo.includes('.')) {
+                            nombreArchivo = nombreArchivo + '.pdf';
+                          }
+
+                          // Obtener el blob (contenido binario del archivo)
+                          const blob = await response.blob();
+
+                          // Crear un URL temporal
+                          const url = window.URL.createObjectURL(blob);
+
+                          // Crear un link temporal y hacer clic para descargar
+                          const link = document.createElement('a');
+                          link.href = url;
+                          link.download = nombreArchivo;
+                          document.body.appendChild(link);
+                          link.click();
+
+                          // Limpiar
+                          document.body.removeChild(link);
+                          window.URL.revokeObjectURL(url);
+
+                          // Registrar en localStorage (opcional)
                           const key = 'downloadedMaterials';
                           const existing = JSON.parse(localStorage.getItem(key) || '[]');
                           const already = existing.find((m) => m.idMaterial === material.idMaterial);
                           if (!already) {
-                            existing.unshift({ idMaterial: material.idMaterial, titulo: material.titulo, año: material.año, ruta: material.ruta_archivo });
+                            existing.unshift({
+                              idMaterial: material.idMaterial,
+                              titulo: material.titulo,
+                              año: material.año,
+                              ruta: material.ruta_archivo,
+                              descargadoEn: new Date().toISOString()
+                            });
                             localStorage.setItem(key, JSON.stringify(existing));
                           }
-                          alert('Descarga registrada en Mis Materiales');
+
+                          alert('Descarga completada');
                         } catch (err) {
-                          console.error(err);
+                          console.error('Error en descarga:', err);
+                          alert('Error al descargar: ' + err.message);
                         }
                       }}
-                      className="bg-yellow-500 text-red-700 px-3 py-1 rounded font-semibold"
+                      className="bg-yellow-500 text-red-700 px-3 py-1 rounded font-semibold hover:bg-yellow-600 cursor-pointer"
                     >
                       Descargar
                     </button>
+
 
                     {adminMode && (
                       <button className="bg-red-700 text-white px-3 py-1 rounded">Editar</button>
