@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import Alert from "../components/Alert";
 import { universidadService } from "../services/universidadService";
 
-export default function UniversidadesPage() {
+export default function UniversidadesPage({ userRole }) {
   const [universidades, setUniversidades] = useState([]);
   const [form, setForm] = useState({ universidad: '', ciudad: '' });
   const [editing, setEditing] = useState(null);
@@ -61,48 +61,54 @@ export default function UniversidadesPage() {
       <h2 className="text-2xl font-bold mb-6">Gestión de Universidades</h2>
       
       {message && <Alert type={message.type}>{message.text}</Alert>}
-      
-      <div className="bg-white border rounded-lg p-6 mb-6">
-        <h3 className="text-lg font-semibold mb-4">
-          {editing ? 'Editar Universidad' : 'Nueva Universidad'}
-        </h3>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium mb-1">Nombre</label>
-            <input
-              type="text"
-              value={form.universidad}
-              onChange={(e) => setForm({...form, universidad: e.target.value})}
-              className="w-full border rounded px-3 py-2"
-              required
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-1">Ciudad</label>
-            <input
-              type="text"
-              value={form.ciudad}
-              onChange={(e) => setForm({...form, ciudad: e.target.value})}
-              className="w-full border rounded px-3 py-2"
-              required
-            />
-          </div>
-          <div className="flex gap-2">
-            <button type="submit" className="bg-red-700 text-white px-4 py-2 rounded hover:bg-red-800 font-semibold">
-              {editing ? 'Actualizar' : 'Crear'}
-            </button>
-            {editing && (
-              <button 
-                type="button" 
-                onClick={() => { setEditing(null); setForm({ universidad: '', ciudad: '' }); }}
-                className="bg-yellow-500 text-red-700 px-4 py-2 rounded hover:bg-yellow-400 font-semibold"
-              >
-                Cancelar
+
+      {userRole === 'admin' ? (
+        <div className="bg-white border rounded-lg p-6 mb-6">
+          <h3 className="text-lg font-semibold mb-4">
+            {editing ? 'Editar Universidad' : 'Nueva Universidad'}
+          </h3>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium mb-1">Nombre</label>
+              <input
+                type="text"
+                value={form.universidad}
+                onChange={(e) => setForm({...form, universidad: e.target.value})}
+                className="w-full border rounded px-3 py-2"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">Ciudad</label>
+              <input
+                type="text"
+                value={form.ciudad}
+                onChange={(e) => setForm({...form, ciudad: e.target.value})}
+                className="w-full border rounded px-3 py-2"
+                required
+              />
+            </div>
+            <div className="flex gap-2">
+              <button type="submit" className="bg-red-700 text-white px-4 py-2 rounded hover:bg-red-800 font-semibold">
+                {editing ? 'Actualizar' : 'Crear'}
               </button>
-            )}
-          </div>
-        </form>
-      </div>
+              {editing && (
+                <button 
+                  type="button" 
+                  onClick={() => { setEditing(null); setForm({ universidad: '', ciudad: '' }); }}
+                  className="bg-yellow-500 text-red-700 px-4 py-2 rounded hover:bg-yellow-400 font-semibold"
+                >
+                  Cancelar
+                </button>
+              )}
+            </div>
+          </form>
+        </div>
+      ) : (
+        <div className="bg-yellow-50 border-yellow-200 text-yellow-800 rounded p-4 mb-6">
+          Modo lectura: No tienes permisos para crear o editar universidades.
+        </div>
+      )}
 
       <div className="bg-white border rounded-lg p-6">
         <h3 className="text-lg font-semibold mb-4">Universidades Registradas</h3>
@@ -113,20 +119,24 @@ export default function UniversidadesPage() {
                 <div className="font-medium">{univ.universidad}</div>
                 <div className="text-sm text-gray-600">{univ.ciudad}</div>
               </div>
-              <div className="flex gap-2">
-                <button 
-                  onClick={() => handleEdit(univ)}
-                  className="text-red-700 hover:underline text-sm font-semibold"
-                >
-                  Editar
-                </button>
-                <button 
-                  onClick={() => handleDelete(univ.idUniversidad)}
-                  className="text-red-600 hover:underline text-sm font-semibold"
-                >
-                  Eliminar
-                </button>
-              </div>
+              {userRole === 'admin' ? (
+                <div className="flex gap-2">
+                  <button 
+                    onClick={() => handleEdit(univ)}
+                    className="text-red-700 hover:underline text-sm font-semibold"
+                  >
+                    Editar
+                  </button>
+                  <button 
+                    onClick={() => handleDelete(univ.idUniversidad)}
+                    className="text-red-600 hover:underline text-sm font-semibold"
+                  >
+                    Eliminar
+                  </button>
+                </div>
+              ) : (
+                <div className="text-sm text-gray-500">Visualización</div>
+              )}
             </div>
           ))}
         </div>

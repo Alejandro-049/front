@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { asignaturaService } from "../services/asignaturaService";
 import Alert from "../components/Alert";
 
-export default function AsignaturasPage() {
+export default function AsignaturasPage({ userRole }) {
   const [asignaturas, setAsignaturas] = useState([]);
   const [nombre, setNombre] = useState("");
   const [message, setMessage] = useState(null);
@@ -51,29 +51,35 @@ export default function AsignaturasPage() {
 
       {message && <Alert type={message.type}>{message.text}</Alert>}
 
-      <div className="bg-white border rounded-lg p-6 mb-6">
-        <h3 className="text-lg font-semibold mb-4">Nueva Asignatura</h3>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium mb-1">
-              Nombre de la Asignatura
-            </label>
-            <input
-              type="text"
-              value={nombre}
-              onChange={(e) => setNombre(e.target.value)}
-              className="w-full border rounded px-3 py-2"
-              required
-            />
-          </div>
-          <button
-            type="submit"
-            className="bg-red-700 text-white px-4 py-2 rounded hover:bg-red-800 font-semibold"
-          >
-            Crear Asignatura
-          </button>
-        </form>
-      </div>
+      {userRole === 'admin' ? (
+        <div className="bg-white border rounded-lg p-6 mb-6">
+          <h3 className="text-lg font-semibold mb-4">Nueva Asignatura</h3>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium mb-1">
+                Nombre de la Asignatura
+              </label>
+              <input
+                type="text"
+                value={nombre}
+                onChange={(e) => setNombre(e.target.value)}
+                className="w-full border rounded px-3 py-2"
+                required
+              />
+            </div>
+            <button
+              type="submit"
+              className="bg-red-700 text-white px-4 py-2 rounded hover:bg-red-800 font-semibold"
+            >
+              Crear Asignatura
+            </button>
+          </form>
+        </div>
+      ) : (
+        <div className="bg-yellow-50 border-yellow-200 text-yellow-800 rounded p-4 mb-6">
+          Modo lectura: No tienes permisos para crear asignaturas.
+        </div>
+      )}
 
       <div className="bg-white border rounded-lg p-6">
         <h3 className="text-lg font-semibold mb-4">Asignaturas Registradas</h3>
@@ -84,12 +90,16 @@ export default function AsignaturasPage() {
               className="flex justify-between items-center p-3 border rounded"
             >
               <div className="font-medium">{asig.idAsignatura}</div>
-              <button
-                onClick={() => handleDelete(asig.idAsignatura)}
-                className="text-red-600 hover:underline text-sm font-semibold"
-              >
-                Eliminar
-              </button>
+              {userRole === 'admin' ? (
+                <button
+                  onClick={() => handleDelete(asig.idAsignatura)}
+                  className="text-red-600 hover:underline text-sm font-semibold"
+                >
+                  Eliminar
+                </button>
+              ) : (
+                <div className="text-sm text-gray-500">Visualización</div>
+              )}
             </div>
           ))}
         </div>

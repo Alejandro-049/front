@@ -5,7 +5,7 @@ import { universidadService } from "../services/universidadService";
 import { asignaturaService } from "../services/asignaturaService";
 import { profesorService } from "../services/profesorService";
 import { materialService } from "../services/materialService";
-export default function SubirMaterialPage() {
+export default function SubirMaterialPage({ userRole }) {
   const [file, setFile] = useState(null);
   const [form, setForm] = useState({
     titulo: '',
@@ -66,99 +66,105 @@ export default function SubirMaterialPage() {
   return (
     <div>
       <h2 className="text-2xl font-bold mb-6">Subir Material Académico</h2>
-      
+
       {message && <Alert type={message.type}>{message.text}</Alert>}
-      
-      <div className="bg-white border rounded-lg p-6">
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium mb-1">Archivo</label>
-            <input
-              type="file"
-              onChange={(e) => setFile(e.target.files[0])}
-              className="w-full border rounded px-3 py-2"
-              required
-            />
-          </div>
-          
-          <div>
-            <label className="block text-sm font-medium mb-1">Título</label>
-            <input
-              type="text"
-              value={form.titulo}
-              onChange={(e) => setForm({...form, titulo: e.target.value})}
-              className="w-full border rounded px-3 py-2"
-              required
-            />
-          </div>
-          
-          <div>
-            <label className="block text-sm font-medium mb-1">Año (ej: 2025-1)</label>
-            <input
-              type="text"
-              value={form.año}
-              onChange={(e) => setForm({...form, año: e.target.value})}
-              className="w-full border rounded px-3 py-2"
-              required
-            />
-          </div>
-          
-          <div>
-            <label className="block text-sm font-medium mb-1">Universidad</label>
-            <select
-              value={form.idUniversidad}
-              onChange={(e) => setForm({...form, idUniversidad: e.target.value})}
-              className="w-full border rounded px-3 py-2"
-              required
-            >
-              <option value="">Seleccione...</option>
-              {universidades.map(u => (
-                <option key={u.idUniversidad} value={u.idUniversidad}>
-                  {u.universidad}
-                </option>
-              ))}
-            </select>
-          </div>
-          
-          <div>
-            <label className="block text-sm font-medium mb-1">Asignatura</label>
-            <select
-              value={form.idAsignatura}
-              onChange={(e) => setForm({...form, idAsignatura: e.target.value})}
-              className="w-full border rounded px-3 py-2"
-              required
-            >
-              <option value="">Seleccione...</option>
-              {asignaturas.map(a => (
-                <option key={a.idAsignatura} value={a.idAsignatura}>
-                  {a.idAsignatura}
-                </option>
-              ))}
-            </select>
-          </div>
-          
-          <div>
-            <label className="block text-sm font-medium mb-1">Profesor</label>
-            <select
-              value={form.idProfesor}
-              onChange={(e) => setForm({...form, idProfesor: e.target.value})}
-              className="w-full border rounded px-3 py-2"
-              required
-            >
-              <option value="">Seleccione...</option>
-              {profesores.map(p => (
-                <option key={p.idProfesor} value={p.idProfesor}>
-                  {p.nombre} {p.apellido}
-                </option>
-              ))}
-            </select>
-          </div>
-          
-          <button type="submit" className="bg-red-700 text-white px-6 py-2 rounded hover:bg-red-800 font-semibold">
-            Subir Material
-          </button>
-        </form>
-      </div>
+
+      {userRole === 'admin' ? (
+        <div className="bg-white border rounded-lg p-6">
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium mb-1">Archivo</label>
+              <input
+                type="file"
+                onChange={(e) => setFile(e.target.files[0])}
+                className="w-full border rounded px-3 py-2"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-1">Título</label>
+              <input
+                type="text"
+                value={form.titulo}
+                onChange={(e) => setForm({...form, titulo: e.target.value})}
+                className="w-full border rounded px-3 py-2"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-1">Año (ej: 2025-1)</label>
+              <input
+                type="text"
+                value={form.año}
+                onChange={(e) => setForm({...form, año: e.target.value})}
+                className="w-full border rounded px-3 py-2"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-1">Universidad</label>
+              <select
+                value={form.idUniversidad}
+                onChange={(e) => setForm({...form, idUniversidad: e.target.value})}
+                className="w-full border rounded px-3 py-2"
+                required
+              >
+                <option value="">Seleccione...</option>
+                {universidades.map(u => (
+                  <option key={u.idUniversidad} value={u.idUniversidad}>
+                    {u.universidad}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-1">Asignatura</label>
+              <select
+                value={form.idAsignatura}
+                onChange={(e) => setForm({...form, idAsignatura: e.target.value})}
+                className="w-full border rounded px-3 py-2"
+                required
+              >
+                <option value="">Seleccione...</option>
+                {asignaturas.map(a => (
+                  <option key={a.idAsignatura} value={a.idAsignatura}>
+                    {a.idAsignatura}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-1">Profesor</label>
+              <select
+                value={form.idProfesor}
+                onChange={(e) => setForm({...form, idProfesor: e.target.value})}
+                className="w-full border rounded px-3 py-2"
+                required
+              >
+                <option value="">Seleccione...</option>
+                {profesores.map(p => (
+                  <option key={p.idProfesor} value={p.idProfesor}>
+                    {p.nombre} {p.apellido}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <button type="submit" className="bg-red-700 text-white px-6 py-2 rounded hover:bg-red-800 font-semibold">
+              Subir Material
+            </button>
+          </form>
+        </div>
+      ) : (
+        <div className="bg-yellow-50 border-yellow-200 text-yellow-800 rounded p-4">
+          Solo administradores pueden subir material. Si necesitas subir un archivo, solicita permisos a un administrador.
+        </div>
+      )}
     </div>
   );
 }
