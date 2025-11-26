@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import Alert from "../components/Alert";
 import { profesorService } from "../services/profesorService";
 
-export default function ProfesoresPage({ userRole }) {
+export default function ProfesoresPage({ adminMode }) {
   const [profesores, setProfesores] = useState([]);
   const [form, setForm] = useState({ nombre: '', apellido: '' });
   const [message, setMessage] = useState(null);
@@ -50,7 +50,7 @@ export default function ProfesoresPage({ userRole }) {
       
       {message && <Alert type={message.type}>{message.text}</Alert>}
 
-      {userRole === 'admin' ? (
+      {adminMode ? (
         <div className="bg-white border rounded-lg p-6 mb-6">
           <h3 className="text-lg font-semibold mb-4">Nuevo Profesor</h3>
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -91,7 +91,7 @@ export default function ProfesoresPage({ userRole }) {
           {profesores.map(prof => (
             <div key={prof.idProfesor} className="flex justify-between items-center p-3 border rounded">
               <div className="font-medium">{prof.nombre} {prof.apellido}</div>
-              {userRole === 'admin' ? (
+              {adminMode ? (
                 <button 
                   onClick={() => handleDelete(prof.idProfesor)}
                   className="text-red-600 hover:underline text-sm font-semibold"

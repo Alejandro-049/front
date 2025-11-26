@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import Alert from "../components/Alert";
 import { universidadService } from "../services/universidadService";
 
-export default function UniversidadesPage({ userRole }) {
+export default function UniversidadesPage({ adminMode }) {
   const [universidades, setUniversidades] = useState([]);
   const [form, setForm] = useState({ universidad: '', ciudad: '' });
   const [editing, setEditing] = useState(null);
@@ -62,7 +62,7 @@ export default function UniversidadesPage({ userRole }) {
       
       {message && <Alert type={message.type}>{message.text}</Alert>}
 
-      {userRole === 'admin' ? (
+      {adminMode ? (
         <div className="bg-white border rounded-lg p-6 mb-6">
           <h3 className="text-lg font-semibold mb-4">
             {editing ? 'Editar Universidad' : 'Nueva Universidad'}
@@ -119,7 +119,7 @@ export default function UniversidadesPage({ userRole }) {
                 <div className="font-medium">{univ.universidad}</div>
                 <div className="text-sm text-gray-600">{univ.ciudad}</div>
               </div>
-              {userRole === 'admin' ? (
+              {adminMode ? (
                 <div className="flex gap-2">
                   <button 
                     onClick={() => handleEdit(univ)}

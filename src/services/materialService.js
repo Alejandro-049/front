@@ -7,7 +7,6 @@ const mockMateriales = [
     asignatura: "MAT101",
     profesor: "1",
     universidad: "1",
-    categoria: "apuntes",
     detalles: "Apuntes completos del semestre con ejemplos y ejercicios resueltos",
     archivo: "apuntes-calculo.pdf",
     fecha: "11/15/2025"
@@ -18,7 +17,6 @@ const mockMateriales = [
     asignatura: "FIS101",
     profesor: "2",
     universidad: "2",
-    categoria: "ejercicios",
     detalles: "Serie de ejercicios propuestos por el profesor con soluciones",
     archivo: "ejercicios-fisica.pdf",
     fecha: "11/10/2025"
@@ -29,7 +27,6 @@ const mockMateriales = [
     asignatura: "PROG101",
     profesor: "3",
     universidad: "3",
-    categoria: "examen",
     detalles: "Examen del semestre anterior con respuestas",
     archivo: "examen-prog.pdf",
     fecha: "11/05/2025"

@@ -1,8 +1,8 @@
 import DashboardCard from "../components/DashboardCard";
 import { useState, useEffect } from "react";
 
-export default function Dashboard({ onNavigate, userRole }) {
-  const isAdmin = userRole === "admin";
+export default function Dashboard({ onNavigate, adminMode }) {
+  const isAdmin = adminMode;
 
   // cargar 'mis materiales' desde localStorage
   const [misMateriales, setMisMateriales] = useState([]);
@@ -18,17 +18,17 @@ export default function Dashboard({ onNavigate, userRole }) {
   }, []);
 
   const adminCards = [
-    { title: "🔍 Buscar Material", description: "Consultar y descargar recursos", page: "buscar" },
-    { title: "📚 Universidades", description: "Crear y gestionar universidades", page: "universidades" },
-    { title: "👨‍🏫 Profesores", description: "Registrar profesores asociados", page: "profesores" },
-    { title: "📖 Asignaturas", description: "Gestionar asignaturas universitarias", page: "asignaturas" },
-    { title: "📤 Subir Material", description: "Cargar material académico", page: "subir" },
+    { title: "Buscar Material", description: "Consultar y descargar recursos", page: "buscar" },
+    { title: "Universidades", description: "Crear y gestionar universidades", page: "universidades" },
+    { title: "Profesores", description: "Registrar profesores asociados", page: "profesores" },
+    { title: "Asignaturas", description: "Gestionar asignaturas universitarias", page: "asignaturas" },
+    { title: "Subir Material", description: "Cargar material académico", page: "subir" },
   ];
 
   const userCards = [
-    { title: "🔍 Buscar Material", description: "Consultar recursos existentes", page: "buscar" },
-    { title: "📖 Asignaturas", description: "Consultar asignaturas (solo lectura)", page: "asignaturas" },
-    { title: "👨‍🏫 Profesores", description: "Consultar profesores (solo lectura)", page: "profesores" },
+    { title: "Buscar Material", description: "Consultar recursos existentes", page: "buscar" },
+    { title: "Asignaturas", description: "Consultar asignaturas (solo lectura)", page: "asignaturas" },
+    { title: "Profesores", description: "Consultar profesores (solo lectura)", page: "profesores" },
   ];
 
   const cards = isAdmin ? adminCards : userCards;
@@ -37,7 +37,7 @@ export default function Dashboard({ onNavigate, userRole }) {
     <div>
       <div className="flex items-center justify-between mb-4">
         <div>
-          <h1 className="text-4xl font-bold mb-1 text-red-700">{isAdmin ? "🔐 Panel de Administración" : "👤 Inicio"}</h1>
+          <h1 className="text-4xl font-bold mb-1 text-red-700">{isAdmin ? "Panel de Administración" : "Inicio"}</h1>
           <p className="text-gray-700">{isAdmin ? "Accede a las funciones administrativas" : "Resumen de tu actividad"}</p>
         </div>
 

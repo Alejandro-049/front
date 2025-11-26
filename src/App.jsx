@@ -9,22 +9,22 @@ import MisMaterialesSubidosPage from "./pages/MisMaterialesSubidosPage";
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState("dashboard");
-  const [userRole, setUserRole] = useState("admin"); // 'admin' | 'user'
+  const [adminMode, setAdminMode] = useState(false); // false = usuario, true = admin
 
   const renderPage = () => {
     switch (currentPage) {
       case "universidades":
-        return <UniversidadesPage userRole={userRole} />;
+        return <UniversidadesPage adminMode={adminMode} />;
       case "profesores":
-        return <ProfesoresPage userRole={userRole} />;
+        return <ProfesoresPage adminMode={adminMode} />;
       case "asignaturas":
-        return <AsignaturasPage userRole={userRole} />;
+        return <AsignaturasPage adminMode={adminMode} />;
       case "buscar":
-        return <BuscarMaterialPage userRole={userRole} />;
+        return <BuscarMaterialPage adminMode={adminMode} />;
       case "mis-materiales":
-        return <MisMaterialesSubidosPage userRole={userRole} />;
+        return <MisMaterialesSubidosPage adminMode={adminMode} />;
       default:
-        return <Dashboard onNavigate={setCurrentPage} userRole={userRole} />;
+        return <Dashboard onNavigate={setCurrentPage} adminMode={adminMode} />;
     }
   };
 
@@ -35,28 +35,29 @@ export default function App() {
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-4">
             <h1 className="text-xl font-bold">UniclouD</h1>
-            <span className="text-sm opacity-90">
-              {userRole === "admin" ? "🔐 Administrador" : "👤 Usuario"}
-            </span>
+            {adminMode && (
+              <span className="text-xs bg-yellow-500 text-red-700 px-2 py-1 rounded font-semibold">
+                Modo Administrador activo
+              </span>
+            )}
           </div>
 
-          <div className="flex items-center gap-3">
-            <div className="text-sm text-white">Rol:</div>
-            <select
-              value={userRole}
-              onChange={(e) => setUserRole(e.target.value)}
-              className="rounded px-2 py-1 text-red-700 font-medium"
-            >
-              <option value="admin">Administrador</option>
-              <option value="user">Usuario</option>
-            </select>
-          </div>
+          <button
+            onClick={() => setAdminMode(!adminMode)}
+            className={`px-4 py-2 rounded font-semibold transition ${
+              adminMode
+                ? "bg-yellow-500 text-red-700 hover:bg-yellow-400"
+                : "bg-gray-300 text-gray-800 hover:bg-gray-400"
+            }`}
+          >
+            Modo Admin: {adminMode ? "ON" : "OFF"}
+          </button>
         </div>
       </header>
 
       {/* Sidebar + Main Content */}
       <div className="flex flex-1 mt-16">
-        <Sidebar currentPage={currentPage} onNavigate={setCurrentPage} userRole={userRole} />
+        <Sidebar currentPage={currentPage} onNavigate={setCurrentPage} userRole={adminMode ? "admin" : "user"} />
 
         {/* Main Content Area */}
         <main className="flex-1 md:ml-64 p-6">

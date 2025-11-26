@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { asignaturaService } from "../services/asignaturaService";
 import Alert from "../components/Alert";
 
-export default function AsignaturasPage({ userRole }) {
+export default function AsignaturasPage({ adminMode }) {
   const [asignaturas, setAsignaturas] = useState([]);
   const [nombre, setNombre] = useState("");
   const [message, setMessage] = useState(null);

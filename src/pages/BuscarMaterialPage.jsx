@@ -8,7 +8,7 @@ import { asignaturaService } from "../services/asignaturaService";
 import { profesorService } from "../services/profesorService";
 import { materialService } from "../services/materialService";
 
-export default function BuscarMaterialPage({ userRole }) {
+export default function BuscarMaterialPage({ adminMode }) {
   const [query, setQuery] = useState("");
   const [filters, setFilters] = useState({
     universidad: '',
@@ -63,9 +63,9 @@ export default function BuscarMaterialPage({ userRole }) {
 
   return (
     <div className="space-y-4">
-      {userRole === 'admin' && (
+      {adminMode && (
         <div className="inline-block bg-red-700 text-white px-3 py-1 rounded text-xs font-semibold mb-4">
-          🔐 Panel Admin
+          Panel Admin
         </div>
       )}
 
@@ -105,8 +105,8 @@ export default function BuscarMaterialPage({ userRole }) {
                   <div>
                     <h4 className="font-semibold text-lg mb-2 text-red-700">{material.titulo}</h4>
                     <div className="text-sm text-gray-600 space-y-1">
-                      <div>📅 Año: {material.año}</div>
-                      <div>📄 Archivo: {material.ruta_archivo}</div>
+                      <div>Año: {material.año}</div>
+                      <div>Archivo: {material.ruta_archivo}</div>
                     </div>
                   </div>
 
@@ -132,7 +132,7 @@ export default function BuscarMaterialPage({ userRole }) {
                       Descargar
                     </button>
 
-                    {userRole === 'admin' && (
+                    {adminMode && (
                       <button className="bg-red-700 text-white px-3 py-1 rounded">Editar</button>
                     )}
                   </div>

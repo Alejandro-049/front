@@ -3,7 +3,7 @@ import { Plus, Trash2, Download, Star } from "lucide-react";
 import Alert from "../components/Alert";
 import UploadMaterialModal from "../components/UploadMaterialModal";
 
-export default function MisMaterialesSubidosPage({ userRole }) {
+export default function MisMaterialesSubidosPage({ adminMode }) {
   const [materiales, setMateriales] = useState([]);
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [message, setMessage] = useState(null);
@@ -75,12 +75,10 @@ export default function MisMaterialesSubidosPage({ userRole }) {
                 <div className="flex-1">
                   <h3 className="text-lg font-semibold text-red-700">{material.titulo}</h3>
                   <div className="text-sm text-gray-600 space-y-1 mt-2">
-                    <div>📚 Asignatura: {material.asignatura || "N/A"}</div>
-                    <div>👨‍🏫 Profesor: {material.profesor || "N/A"}</div>
-                    <div>🏫 Universidad: {material.universidad || "N/A"}</div>
-                    <div>📅 Fecha: {material.fecha || "N/A"}</div>
-                    {material.categoria && <div>🏷️ Categoría: {material.categoria}</div>}
-                    {material.detalles && <div>📝 Detalles: {material.detalles}</div>}
+                    <div>Asignatura: {material.asignatura || "N/A"}</div>
+                    <div>Profesor: {material.profesor || "N/A"}</div>
+                    <div>Universidad: {material.universidad || "N/A"}</div>
+                    <div>Fecha: {material.fecha || "N/A"}</div>
                   </div>
                 </div>
 
